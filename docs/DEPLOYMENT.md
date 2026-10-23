@@ -14,7 +14,7 @@ Confirm the CSL domain, cPanel/Linux account, existing Apache/OpenLiteSpeed conf
 4. Set `HOST=127.0.0.1`, an available `PORT`, and `SITE_URL=https://THE_CONFIRMED_DOMAIN`.
 5. Create `/home/CSL_ACCOUNT/private/csl-mfg` owned by the account with mode `700`. Set its absolute path as `DATA_DIR`.
 6. Keep `SEARCH_INDEXING=false` during review. Leave OpenAI variables blank until the approved key and model are available.
-7. Configure notification sender, recipient and the existing sendmail binary if available. Test delivery to the verified company inbox. Unconfigured mail leaves enquiries safely stored with notification status pending.
+7. Configure `MAIL_PROVIDER=mailtrap`, `MAILTRAP_API_TOKEN`, `MAIL_FROM` using a verified sending domain and `ENQUIRY_EMAIL`. The optional local MTA route requires explicit `MAIL_PROVIDER=sendmail` and `SENDMAIL_PATH`. Test delivery to the verified company inbox. Unconfigured mail leaves enquiries safely stored with notification status pending.
 8. Run `npm run check` and `npm test`.
 9. Adapt `deploy/csl-mfg.service.example` with the verified account and absolute Node binary path. Install and start that specific service. If the host already provides an account-scoped Node process manager, use that instead.
 10. In the existing web stack's **CSL virtual host only**, proxy the domain to the selected loopback port. Route all page and `/api/` requests to Node; do not expose the checkout or private storage as the document root. No NGINX configuration is needed.
@@ -44,3 +44,11 @@ The current rate limiter is process-local. Use one Node instance for this versio
 ## Optional container
 
 `Dockerfile` is provided. Publish the container port to loopback only, mount `/data` to durable account-scoped private storage and supply environment variables securely. Ensure the volume is writable by the container's non-root `node` user. This is an alternative to the systemd setup, not an additional requirement.
+
+## NEXUS preview access
+
+Run `npm run nexus:set-password` interactively on the confirmed account. It stores only a salted hash in the ignored, mode-600 `.env`. Restart the app. Production HTTPS adds the Secure cookie flag; sessions are memory-only and expire after 30 minutes or restart. Short/shared codes must be replaced with individual staff authentication before connecting private Trello or email records. No such sources are connected by this release.
+
+## Phase 2 preview pages
+
+`/track-order` and `/gallery` contain explicitly fictional/sample information. `/nexus` is excluded from the public sitemap and marked noindex, but this is not authentication: its API independently enforces staff sessions. Live customer portal authentication and Trello synchronisation remain future work; do not connect real orders to the demo page. Read `docs/PHASE-2-BLUEPRINT.md` before enabling customer access.

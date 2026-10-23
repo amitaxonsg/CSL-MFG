@@ -11,7 +11,15 @@ Full-width, responsive manufacturing website based on the approved CSL concept: 
 - Optional email notification using the server's local sendmail-compatible MTA. Pending/failed notifications remain recorded and can be retried with the operator CLI.
 - CSL assistant with useful guided responses now; optional server-side OpenAI Responses API connection later. API errors fall back to guided responses.
 - SEO metadata, canonical URLs, Organization JSON-LD, sitemap, robots controls, `llms.txt`, social metadata and legacy-page redirects.
-- No runtime package dependencies, external font services, analytics trackers or hosted backend dependency.
+- No runtime package dependencies, external font services or analytics trackers. Forms use private server storage; optional email/AI features use their configured APIs.
+
+## Phase 2 provisions (v1.1)
+
+- **Track your Order**: fictional current/past order dashboard, customer access preview and repeat/change/urgent request demonstrator. No live customer login or Trello order feed yet.
+- **Jersey Gallery**: 12 original schematic concepts per sport, Rugby first, with sport filters and concept references carried into an RFQ. Not real customer designs or product photographs.
+- **ASK NEXUS**: separate internal entry, server-verified access hash and 30-minute session, optional OpenAI text assistant, no work-email or Trello tools. Configure preview access with `npm run nexus:set-password`; the resulting `.env` is private and ignored by Git. Use individual staff authentication before connecting actual work data.
+- **Mailtrap API**: preferred server-side notification adapter; sender, recipient and token remain deployment settings. Provider acceptance is recorded separately from delivery.
+- **Phase 2 blueprint**: [detailed scope and acceptance gates](docs/PHASE-2-BLUEPRINT.md).
 
 ## Run locally
 
@@ -37,7 +45,7 @@ See [deployment guide](docs/DEPLOYMENT.md). Run the app as the CSL account, on a
 
 Set `DATA_DIR` to an absolute private path outside `public_html`, the checkout, and backups intended for public access. The default development path is `./var`, excluded from Git. Only `public/` assets and defined page routes are served. The server never provides an uploaded-file URL.
 
-The API returns success only after the record and attachments are written. It does not falsely claim email delivery. The on-page success includes a reference. Add `SENDMAIL_PATH`, `ENQUIRY_EMAIL` and `MAIL_FROM` to enable staff notifications; use a verified company recipient at deployment. Uploaded files stay private and are not attached to notifications.
+The API returns success only after the record and attachments are written. It does not falsely claim email delivery. The on-page success includes a reference. Set `MAIL_PROVIDER=mailtrap`, `MAILTRAP_API_TOKEN`, `ENQUIRY_EMAIL` and `MAIL_FROM` for Mailtrap API notifications. A configured sender domain is required. Alternatively, explicitly select `MAIL_PROVIDER=sendmail` and set `SENDMAIL_PATH`. Use a verified company recipient at deployment. Uploaded files stay private and are not attached to notifications.
 
 Operator commands, run from the checkout:
 
@@ -66,3 +74,5 @@ Product images are AI-generated illustrative concepts, not photographs of actual
 ## Verification
 
 Automated tests cover public pages, HTTP routes, enquiry persistence and attachments, invalid inputs, idempotency, private-path protection, redirects and guided/AI-adapter fallback behaviour. Live OpenAI, mail delivery, production domain/proxy configuration and server backups require deployment verification.
+
+NEXUS sessions require an essential authentication cookie. No staff code, password hash, real orders, customer data or API keys are committed. The requested short preview code is not suitable for protecting connected company sources.

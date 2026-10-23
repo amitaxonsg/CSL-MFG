@@ -23,3 +23,7 @@ Planned visitor journey:
 7. CSL reviews artwork feasibility, manufacturing specifications and commercial terms before production.
 
 No editor, AI image generation, live mockup, account system or print-ready output is claimed in Phase 1. Do not silently enable those features. Phase 2 needs product templates, placement rules, asset permissions, persistent project storage, generation cost limits, moderation, production export specifications and staff approval design. A generated visual is a concept, not an approved production file.
+
+## Related Phase 2 provisions
+
+See [full blueprint](PHASE-2-BLUEPRINT.md) for customer order tracking, email verification, repeat-order variants, sport-filtered gallery, staff NEXUS permissions, Mailtrap notifications and Trello sync. NEXUS has an independent prompt and session gate; no private-source tools are available. API adapter behaviour is tested with mocks only until credentials are configured.

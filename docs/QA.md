@@ -19,3 +19,9 @@
 - Product photographs are illustrative concepts pending approved actual photography.
 
 The first HTTP preview exposed a client UUID compatibility issue. A secure-random fallback was added, forms explicitly use POST even when JavaScript fails, and script/style cache revalidation/versioning was added. Successful browser submission was repeated after these fixes.
+
+## v1.1 Phase 2 provisions
+
+Fifteen automated tests pass, including Mailtrap explicit-success checks, customer field allowlisting, cross-customer denial, immutable repeat-request provenance, NEXUS authentication/session/logout and the labelled preview pages. No real Mailtrap, Trello or OpenAI requests were made. Staff password/hash remains outside tracked source. Customer data access is not enabled.
+
+Browser verification for v1.1: sport filter switched Rugby to Basketball with twelve visible concepts; fictional past-order view opened; repeat preview updated to revised artwork, 72 pieces and urgent timing; NEXUS preview access signed in, provided its no-sources guided response and signed out. No live customer data or provider requests were used.
