@@ -1,0 +1,21 @@
+# Replace CSL_ACCOUNT and node binary path with verified values before installation.
+[Unit]
+Description=CSL Manufacturing website
+After=network.target
+[Service]
+Type=simple
+User=CSL_ACCOUNT
+Group=CSL_ACCOUNT
+WorkingDirectory=/home/CSL_ACCOUNT/apps/CSL-MFG
+EnvironmentFile=/home/CSL_ACCOUNT/apps/CSL-MFG/.env
+ExecStart=/usr/bin/node server.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/CSL_ACCOUNT/private/csl-mfg
+[Install]
+WantedBy=multi-user.target

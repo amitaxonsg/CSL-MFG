@@ -1,0 +1,34 @@
+'use strict';
+const $=s=>document.querySelector(s);
+const newKey=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(Number(c)^crypto.getRandomValues(new Uint8Array(1))[0]&15>>Number(c)/4).toString(16));
+const toggle=$('.menu-toggle'), nav=$('#main-nav');
+function closeMenu(){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');document.body.classList.remove('menu-open');}
+toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);});
+nav.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
+window.addEventListener('resize',()=>{if(innerWidth>800)closeMenu();});
+const chat=$('#chat-panel'), launcher=$('.chat-launcher'), chatInput=$('#chat-input'), messages=$('.chat-messages');
+let lastChatFocus=null;
+function setChat(open){chat.hidden=!open;launcher.setAttribute('aria-expanded',String(open));if(open){lastChatFocus=document.activeElement;chatInput.focus();}else (lastChatFocus||launcher).focus();}
+launcher.addEventListener('click',()=>setChat(chat.hidden));$('#chat-close').addEventListener('click',()=>setChat(false));
+document.querySelectorAll('[data-open-chat]').forEach(b=>b.addEventListener('click',()=>setChat(true)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!chat.hidden)setChat(false);closeMenu();}});
+function addMessage(text,role){const p=document.createElement('p');p.className='chat-message '+role;p.textContent=text;messages.append(p);messages.scrollTop=messages.scrollHeight;return p;}
+let history=[],chatBusy=false;
+async function askChat(text){if(chatBusy)return;chatBusy=true;addMessage(text,'user');chatInput.value='';const pending=addMessage('One moment…','assistant');const button=$('#chat-form button');button.disabled=true;try{const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,history})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Please try again.');pending.textContent=data.answer;$('#chat-mode').textContent=data.mode==='ai'?'AI-assisted product & enquiry guidance':'Guided answers · AI connection coming later';history=[...history,{role:'user',content:text},{role:'assistant',content:data.answer}].slice(-8);}catch(e){pending.textContent=e.message||'Please contact our team using the links below.';}finally{chatBusy=false;button.disabled=false;messages.scrollTop=messages.scrollHeight;}}
+$('#chat-form').addEventListener('submit',e=>{e.preventDefault();const text=chatInput.value.trim();if(text)askChat(text);});
+document.querySelectorAll('[data-question]').forEach(b=>b.addEventListener('click',()=>askChat(b.dataset.question)));
+const form=$('[data-enquiry]');
+if(form){
+ const fileInput=form.querySelector('.file-input'),list=form.querySelector('.file-list'),zone=form.querySelector('.upload-zone'),status=form.querySelector('.form-status');let selected=[];
+ const allowed={'image/jpeg':['jpg','jpeg'],'image/png':['png'],'image/webp':['webp'],'application/pdf':['pdf']};
+ function showFiles(){list.replaceChildren();selected.forEach((f,i)=>{const li=document.createElement('li');const span=document.createElement('span');span.textContent=f.name+' · '+(f.size/1024/1024).toFixed(2)+' MB';const b=document.createElement('button');b.type='button';b.textContent='Remove';b.setAttribute('aria-label','Remove '+f.name);b.addEventListener('click',()=>{selected.splice(i,1);showFiles();});li.append(span,b);list.append(li);});}
+ function addFiles(files){status.textContent='';status.className='form-status';const incoming=Array.from(files);if(selected.length+incoming.length>3){status.textContent='Please choose a maximum of three files.';status.classList.add('error');return;}for(const f of incoming){const ext=f.name.split('.').pop().toLowerCase();if(!allowed[f.type]?.includes(ext)||f.size>5*1024*1024||f.size===0){status.textContent='Please upload JPG, PNG, WebP or PDF files, up to 5 MB each.';status.classList.add('error');return;}}selected.push(...incoming);showFiles();}
+ fileInput.addEventListener('change',()=>{addFiles(fileInput.files);fileInput.value='';});
+ for(const event of ['dragenter','dragover'])zone.addEventListener(event,e=>{e.preventDefault();zone.classList.add('drag-over');});
+ for(const event of ['dragleave','drop'])zone.addEventListener(event,e=>{e.preventDefault();zone.classList.remove('drag-over');if(event==='drop')addFiles(e.dataTransfer.files);});
+ const product=new URLSearchParams(location.search).get('product');if(product&&form.elements.product){for(const option of form.elements.product.options)if(option.value===product)form.elements.product.value=product;}
+ const dateInput=form.elements.deliveryDate;if(dateInput){const today=new Date();today.setMinutes(today.getMinutes()-today.getTimezoneOffset());dateInput.min=today.toISOString().slice(0,10);}
+ const toBase64=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,data:reader.result.split(',')[1]});reader.onerror=()=>reject(new Error('Could not read a file. Please remove it and try again.'));reader.readAsDataURL(file);});
+ let submissionKey=newKey();
+ form.addEventListener('submit',async e=>{e.preventDefault();if(!form.reportValidity())return;const button=form.querySelector('[type=submit]');button.disabled=true;const original=button.innerHTML;button.textContent='Sending your enquiry…';status.className='form-status';status.textContent='';try{const data=Object.fromEntries(new FormData(form));delete data.artwork;data.type=form.dataset.enquiry;data.consent=form.elements.consent.checked;data.files=await Promise.all(selected.map(toBase64));data.submissionKey=submissionKey;const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw new Error(result.error||'We could not save your enquiry. Please try again.');status.textContent=`Thank you — your enquiry has been received. Your reference is ${result.reference}. Our team will review your details and follow up.`;status.classList.add('success');form.reset();selected=[];showFiles();submissionKey=newKey();status.scrollIntoView({behavior:'smooth',block:'center'});}catch(err){status.textContent=(err.message||'Unable to submit.')+' Your details remain here. You can also call +63 45 499 5422.';status.classList.add('error');}finally{button.disabled=false;button.innerHTML=original;}});
+}

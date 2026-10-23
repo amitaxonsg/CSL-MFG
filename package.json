@@ -1,0 +1,16 @@
+{
+  "name": "csl-mfg",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CSL manufacturing website with private RFQs, artwork uploads and an OpenAI-ready assistant",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "dev": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test",
+    "check": "node --check server.mjs && node --check lib/pages.mjs && node --check lib/intake.mjs && node --check public/app.js"
+  }
+}
