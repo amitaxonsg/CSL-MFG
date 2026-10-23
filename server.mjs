@@ -1,3 +1,4 @@
+import {heritageImages} from './lib/heritage.mjs';
 import {verifyPassword,hasNexusSession,nexusCookie,openNexusSession,closeNexusSession,nexusAnswer} from './lib/nexus.mjs';
 import http from 'node:http';
 import {readFile,stat} from 'node:fs/promises';
@@ -9,7 +10,7 @@ import {assistantAnswer} from './lib/assistant.mjs';
 const root=dirname(fileURLToPath(import.meta.url)),publicDir=resolve(root,'public');
 const dataDir=resolve(process.env.DATA_DIR||resolve(root,'var'));
 if(dataDir===publicDir||dataDir.startsWith(publicDir+sep))throw new Error('DATA_DIR must be outside public/.');
-const mime={'.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2'};
+const mime={'.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2','.ttf':'font/ttf'};
 const requests=new Map(),nexusAttempts=new Map();let activeChat=0;
 function nexusLoginLimit(key){const now=Date.now();for(const [k,v]of nexusAttempts)if(v.until<now)nexusAttempts.delete(k);let slot=nexusAttempts.get(key);if(!slot){if(nexusAttempts.size>=10000)throw new HttpError(503,'Please try again later.');slot={count:0,until:now+900000};nexusAttempts.set(key,slot);}if(++slot.count>5)throw new HttpError(429,'Too many access attempts. Please wait 15 minutes.');}
 const cleanup=setInterval(()=>{const now=Date.now();for(const [key,value] of requests)if(value.until<now)requests.delete(key);},60000);cleanup.unref();
@@ -19,7 +20,7 @@ function securityHeaders(res){res.setHeader('X-Content-Type-Options','nosniff');
 function json(res,status,data){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(data));}
 async function readJson(req,max){if(!(req.headers['content-type']||'').startsWith('application/json'))throw new HttpError(415,'Please submit using the website form.');let bytes=0;const chunks=[];for await(const chunk of req){bytes+=chunk.length;if(bytes>max)throw new HttpError(413,'This upload is too large. Use up to three files of 5 MB each.');chunks.push(chunk);}try{return JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw new HttpError(400,'Invalid request.');}}
 function checkOrigin(req){if(req.headers['sec-fetch-site']==='cross-site')throw new HttpError(403,'Please submit from the CSL website.');const origin=req.headers.origin;if(origin){const expected=process.env.SITE_URL||`http://${req.headers.host}`;try{if(new URL(origin).origin!==new URL(expected).origin)throw new Error();}catch{throw new HttpError(403,'Please submit from the CSL website.');}}}
-const redirects={'/history':'/about','/factory':'/capabilities','/general-information':'/faqs','/contact-us':'/contact'};
+const redirects={'/gallery':'/design-gallery','/history':'/about','/factory':'/capabilities','/general-information':'/faqs','/contact-us':'/contact'};
 export function createServer(){return http.createServer(async(req,res)=>{
  securityHeaders(res);
  try{const url=new URL(req.url,'http://localhost');let path=decodeURIComponent(url.pathname);if(path.includes('\0'))throw new HttpError(400,'Invalid URL.');if(path.length>1&&path.endsWith('/')){res.writeHead(308,{Location:path.slice(0,-1)+url.search});return res.end();}
@@ -48,8 +49,29 @@ export function createServer(){return http.createServer(async(req,res)=>{
  if(redirects[path]){res.writeHead(301,{Location:redirects[path]});return res.end();}
  const origin=(process.env.SITE_URL||'http://localhost:3000').replace(/\/$/,'');
  if(path==='/robots.txt'){res.setHeader('Content-Type','text/plain');return res.end(process.env.SEARCH_INDEXING==='true'?`User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /nexus\nSitemap: ${origin}/sitemap.xml\n`:'User-agent: *\nDisallow: /\n');}
- if(path==='/sitemap.xml'){res.setHeader('Content-Type','application/xml');return res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths.map(p=>`<url><loc>${origin.replace(/&/g,'&amp;')+p}</loc></url>`).join('')}</urlset>`);}
- if(path==='/llms.txt'){res.setHeader('Content-Type','text/plain; charset=utf-8');return res.end(`# CSL Manufacturing\n\n> Family-owned garment manufacturer in the Philippines.\n\n- [Products](${origin}/products): Sportswear, corporate apparel, knitwear and socks.\n- [Capabilities](${origin}/capabilities): Production and quality processes.\n- [FAQs](${origin}/faqs): Ordering information.\n- [RFQ](${origin}/rfq): Submit a brief and artwork.\n- [Contact](${origin}/contact): Contact the team.\n- [CSL Studio](${origin}/studio): Planned Phase 2, coming soon.\n\nPrices, minimum orders and lead times require confirmation. Product imagery is illustrative.\n`);}
+ if(path==='/sitemap.xml'){res.setHeader('Content-Type','application/xml');return res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${paths.map(p=>`<url><loc>${origin.replace(/&/g,'&amp;')+p}</loc>${heritageImages.filter(x=>x.pages.some(old=>({'/factory':'/capabilities','/history':'/about'}[old]||old)===p)).map(x=>`<image:image><image:loc>${origin}/assets/heritage/${x.file}</image:loc></image:image>`).join('')}</url>`).join('')}</urlset>`);}
+ if(path==='/llms.txt'){res.setHeader('Content-Type','text/plain; charset=utf-8');return res.end(`# Custom Sports and Leisure Manufacturing Corp.
+
+> Export-focused, family-owned garment manufacturer based in Clark Freeport Zone, Pampanga, Philippines. International brands, distributors and organisations are primary buyers; Philippine enquiries are also welcome.
+
+## Company facts
+- Products: custom sublimated sportswear, cut-and-sew apparel, corporate/leisurewear, knitwear and performance socks.
+- Address: Unit 11A3 Philexcel Business Park, M.A. Roxas Highway, Clark Freeport Zone, Angeles City, Pampanga 2023, Philippines.
+- Phone: +63 45 499 5422.
+- Exact minimum quantities, pricing, lead times, certification and shipping terms require CSL confirmation.
+
+## Public information
+${paths.filter(p=>!['/privacy','/track-order','/studio'].includes(p)).map(p=>'- ['+(p==='/'?'Home':p.slice(1).replaceAll('-',' ').replaceAll('/',' / '))+']('+origin+p+')').join('\n')}
+
+## Feature status
+- [CSL Studio](${origin}/studio): Phase 2 coming soon. Logo uploads, AI design and garment composition are planned, not live.
+- [Track Your Order](${origin}/track-order): fictional Phase 2 preview. No live customer order access.
+- Design Gallery concepts are illustrations or AI-created inspiration, not manufactured customer portfolio evidence. Original factory, history and fabric photography comes from CSL's original website.
+- Public assistant: guided mode unless an OpenAI connection is configured. NEXUS is an internal access-gated workspace; it has no private work-data connection in this version.
+- RFQ/contact forms accept a brief and private artwork. Staff confirm quotations and feasibility.
+
+[Privacy](${origin}/privacy). No financial or internal order data is published.
+`);}
  if(path.startsWith('/assets/')||['/styles.css','/app.js'].includes(path)){
   const file=resolve(publicDir,'.'+path);if(!file.startsWith(publicDir+sep))throw new HttpError(404,'Not found.');let info;try{info=await stat(file);}catch{throw new HttpError(404,'Not found.');}if(!info.isFile()||!mime[extname(file)])throw new HttpError(404,'Not found.');res.setHeader('Content-Type',mime[extname(file)]);res.setHeader('Cache-Control',['.css','.js'].includes(extname(file))?'no-cache':'public, max-age=3600');res.setHeader('Content-Length',info.size);return res.end(req.method==='HEAD'?undefined:await readFile(file));
  }

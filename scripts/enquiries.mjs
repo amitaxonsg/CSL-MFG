@@ -10,5 +10,5 @@ if(command==='list'){
 }else if(['show','retry-notification'].includes(command)&&/^[a-f0-9]{32}$/.test(id||'')){
  const dir=join(root,id),record=JSON.parse(await readFile(join(dir,'record.json'),'utf8'));
  if(command==='show')console.log(JSON.stringify({...record,privateAttachmentDirectory:dir},null,2));
- else {if(['sent','accepted'].includes(record.notification.status)){console.log('Already sent. No duplicate notification generated.');}else{await notifyEnquiry({record,dir,duplicate:false});console.log(record.reference+': '+record.notification.status);}}
+ else {if(record.notification.status==='sent'||(record.notification.status==='accepted'&&record.customerNotification?.status==='accepted')){console.log('Already sent. No duplicate notification generated.');}else{await notifyEnquiry({record,dir,duplicate:false});console.log(record.reference+': '+record.notification.status);}}
 }else{console.error('Usage: node --env-file-if-exists=.env scripts/enquiries.mjs [list | show ID | retry-notification ID]');process.exitCode=1;}

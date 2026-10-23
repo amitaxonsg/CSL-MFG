@@ -2,10 +2,10 @@
 const $=s=>document.querySelector(s);
 const newKey=()=>typeof crypto.randomUUID==='function'?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(Number(c)^crypto.getRandomValues(new Uint8Array(1))[0]&15>>Number(c)/4).toString(16));
 const toggle=$('.menu-toggle'), nav=$('#main-nav');
-function closeMenu(){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');document.body.classList.remove('menu-open');}
-toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);});
+function closeMenu(){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');document.body.classList.remove('menu-open');}
+toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');nav.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);});
 nav.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
-window.addEventListener('resize',()=>{if(innerWidth>800)closeMenu();});
+window.addEventListener('resize',()=>{if(innerWidth>1100)closeMenu();});
 const chat=$('#chat-panel'), launcher=$('.chat-launcher'), chatInput=$('#chat-input'), messages=$('.chat-messages');
 let lastChatFocus=null;
 function setChat(open){chat.hidden=!open;launcher.setAttribute('aria-expanded',String(open));if(open){lastChatFocus=document.activeElement;chatInput.focus();}else (lastChatFocus||launcher).focus();}
@@ -34,11 +34,14 @@ if(form){
 }
 // Phase 2 samples are deliberately independent from live order endpoints.
 const filters=document.querySelectorAll('[data-sport-filter]');
-filters.forEach(b=>b.addEventListener('click',()=>{const sport=b.dataset.sportFilter;filters.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-sport-group]').forEach(g=>{g.hidden=g.dataset.sportGroup!==sport;});$('#gallery-heading').textContent='The '+sport+' edit.';$('#gallery-status').textContent='Showing 12 '+sport+' concepts.';}));
+function selectSport(sport){const selected=[...document.querySelectorAll('[data-sport-group]')].find(x=>x.dataset.sportGroup===sport);if(!selected)return;filters.forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.sportFilter===sport)));document.querySelectorAll('[data-sport-group]').forEach(g=>{g.hidden=g.dataset.sportGroup!==sport;});$('#gallery-heading').textContent='The '+sport+' edit.';$('#gallery-status').textContent='Showing 12 '+sport+' concepts.';if($('#sport-select'))$('#sport-select').value=sport;}
+filters.forEach(b=>b.addEventListener('click',()=>selectSport(b.dataset.sportFilter)));
+$('#sport-select')?.addEventListener('change',e=>selectSport(e.target.value));
+if(filters.length)selectSport(new URLSearchParams(location.search).get('sport')||'Rugby');
 document.querySelectorAll('[data-order-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-order-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));document.querySelectorAll('[data-order-group]').forEach(g=>{g.hidden=g.dataset.orderGroup!==b.dataset.orderFilter;});$('#repeat-preview').hidden=true;}));
 const repeat=$('#repeat-preview');
 if(repeat){const update=()=>{$('#repeat-summary').textContent='Sample request: '+$('#repeat-type').value+' · '+($('#repeat-qty').value||'quantity to confirm')+' pieces · '+$('#repeat-urgency').value+($('#repeat-date').value?' · requested '+$('#repeat-date').value:'')+'. Staff review required.';};document.querySelectorAll('[data-demo-reorder]').forEach(b=>b.addEventListener('click',()=>{repeat.hidden=false;$('#repeat-source').textContent='Based on fictional order '+b.dataset.demoReorder+' — '+b.dataset.demoName+'.';$('#repeat-qty').value=b.dataset.demoQty;$('#repeat-type').selectedIndex=0;$('#repeat-urgency').selectedIndex=0;$('#repeat-notes').value='';$('#repeat-date').value='';update();repeat.scrollIntoView({behavior:'smooth',block:'start'});}));repeat.querySelectorAll('input,select,textarea').forEach(x=>x.addEventListener('input',update));}
-if(form){const query=new URLSearchParams(location.search),concept=query.get('concept'),sport=query.get('sport');if(concept&&/^[A-Z]{3}-\d{2}$/.test(concept)&&sport&&/^[A-Za-z]{3,20}$/.test(sport))form.elements.message.value='I am interested in the illustrative '+sport+' gallery concept '+concept+'. My project requirements are: ';else if(query.get('interest')==='repeat-order')form.elements.message.value='I would like to discuss a repeat-order request. Original order reference (if known): ';}
+if(form){const query=new URLSearchParams(location.search),concept=query.get('concept'),sport=query.get('sport');if(sport&&form.elements.sport&&[...form.elements.sport.options].some(x=>x.value===sport))form.elements.sport.value=sport;if(concept&&/^[A-Z]{3}-\d{2}$/.test(concept)&&sport&&/^[A-Za-z &-]{3,50}$/.test(sport))form.elements.message.value='I am interested in the illustrative '+sport+' gallery concept '+concept+'. My project requirements are: ';else if(query.get('interest')==='repeat-order')form.elements.message.value='I would like to discuss a repeat-order request. Original order reference (if known): ';}
 const nexusLogin=$('#nexus-login');
 if(nexusLogin){
  const work=$('#nexus-chat'),loginStatus=$('#nexus-login-status'),log=$('#nexus-messages');let nexusHistory=[],nexusBusy=false;

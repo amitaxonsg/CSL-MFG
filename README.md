@@ -76,3 +76,6 @@ Product images are AI-generated illustrative concepts, not photographs of actual
 Automated tests cover public pages, HTTP routes, enquiry persistence and attachments, invalid inputs, idempotency, private-path protection, redirects and guided/AI-adapter fallback behaviour. Live OpenAI, mail delivery, production domain/proxy configuration and server backups require deployment verification.
 
 NEXUS sessions require an essential authentication cookie. No staff code, password hash, real orders, customer data or API keys are committed. The requested short preview code is not suitable for protecting connected company sources.
+
+## Version 1.2 — export buyers and broader industries
+Design Gallery now provides 300 illustrative concepts across sports and business categories. Industry and export buyer pages, all 28 inventoried original-site photos, locally hosted Manrope fonts, stronger utility navigation and branded Mailtrap staff/customer email templates are included. See [discovery and positioning](docs/EXPORT-AND-DISCOVERY.md), [email activation](docs/MAILTRAP-SETUP.md), and [image provenance](docs/OLD-SITE-IMAGE-INVENTORY.json). Mailtrap credentials and live delivery verification remain pending; Phase 2 functionality remains labelled as preview/coming soon.
