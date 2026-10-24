@@ -1,3 +1,9 @@
+## Production status — 24 October 2026
+
+Live at https://csl-mfg.com, application v1.7.1. Public indexing enabled;24 public sitemap routes, Google/Bing verification tags, consent-controlled GA4, favicons and social metadata. Mike, CSL AI Assistant, uses Groq with a private server key and curated public CSL knowledge. NEXUS remains the internal CSL AI Agent with private-source connections pending.
+
+Contact/RFQ have been tested through the live browser, with staff notification and customer acknowledgement received in Amit’s Gmail. Routing uses the user-confirmed Adam/Ben Gmail addresses; Amit copied. See docs/FINAL-VERIFICATION.md for references, reply behavior and remaining Phase2 scope. Real credentials and private recipient configuration are not in this repository.
+
 # CSL Manufacturing
 
 Full-width, responsive manufacturing website based on the approved CSL concept: warm white, black, navy product imagery and lime accents. Original CSL logo retained. Prepared for the existing German server; nothing is deployed automatically.
