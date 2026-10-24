@@ -1,6 +1,6 @@
 {
   "name": "csl-mfg",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "type": "module",
   "description": "CSL manufacturing website with private RFQs, artwork uploads and an OpenAI-ready assistant",
@@ -11,7 +11,7 @@
     "start": "node --env-file-if-exists=.env server.mjs",
     "dev": "node --env-file-if-exists=.env server.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check lib/design-renders.mjs && node --check lib/industries.mjs && node --check lib/heritage.mjs && node --check lib/pages.mjs && node --check lib/phase2.mjs && node --check lib/intake.mjs && node --check lib/email.mjs && node --check lib/nexus.mjs && node --check lib/order-contract.mjs && node --check public/app.js && node --check public/analytics.js",
+    "check": "node --check server.mjs && node --check lib/mike-knowledge.mjs && node --check lib/discovery.mjs && node --check lib/design-renders.mjs && node --check lib/industries.mjs && node --check lib/heritage.mjs && node --check lib/pages.mjs && node --check lib/phase2.mjs && node --check lib/intake.mjs && node --check lib/email.mjs && node --check lib/nexus.mjs && node --check lib/order-contract.mjs && node --check public/app.js && node --check public/analytics.js",
     "nexus:set-password": "node scripts/set-nexus-password.mjs"
   }
 }
