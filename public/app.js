@@ -5,7 +5,7 @@ const toggle=$('.menu-toggle'), nav=$('#main-nav');
 function closeMenu(){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');document.body.classList.remove('menu-open');}
 toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');nav.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);});
 nav.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
-window.addEventListener('resize',()=>{if(innerWidth>1100)closeMenu();});
+window.addEventListener('resize',()=>{if(innerWidth>1360)closeMenu();});
 const chat=$('#chat-panel'), launcher=$('.chat-launcher'), chatInput=$('#chat-input'), messages=$('.chat-messages');
 let lastChatFocus=null;
 function setChat(open){chat.hidden=!open;launcher.setAttribute('aria-expanded',String(open));if(open){lastChatFocus=document.activeElement;chatInput.focus();}else (lastChatFocus||launcher).focus();}
