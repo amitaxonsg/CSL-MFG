@@ -30,3 +30,7 @@ Contact Us appears in the main desktop and mobile navigation (previously mobile-
 6. Public content: approved case studies, real finished garment photography and supported fabric/compliance documents supplied by CSL. Never publish private Trello artwork, customer names or logos as a public portfolio without clearance.
 7. Launch: final contact/claims review, mail delivery test, accessibility/mobile pass, then explicit indexing switch and search-console/sitemap submission. No SEO/AEO/GEO result guarantee.
 8. Internal NEXUS: individual staff identity and roles before private Trello/email access; the shared preview code is not a production staff identity system.
+
+## Production verification
+
+v1.4.3 deployed24 October2026. All22 tests passed on VPS; health OK, csl/csl-mfg/Apache active. Desktop Contact link visible and highlighted. Header fits1441px viewport;390px mobile menu includes Contact and page has no horizontal overflow. Live screenshot: screenshots/contact-navigation-v1.4.3-live.jpg.
