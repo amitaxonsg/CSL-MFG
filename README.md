@@ -79,3 +79,6 @@ NEXUS sessions require an essential authentication cookie. No staff code, passwo
 
 ## Version 1.2 — export buyers and broader industries
 Design Gallery now provides 300 illustrative concepts across sports and business categories. Industry and export buyer pages, all 28 inventoried original-site photos, locally hosted Manrope fonts, stronger utility navigation and branded Mailtrap staff/customer email templates are included. See [discovery and positioning](docs/EXPORT-AND-DISCOVERY.md), [email activation](docs/MAILTRAP-SETUP.md), and [image provenance](docs/OLD-SITE-IMAGE-INVENTORY.json). Mailtrap credentials and live delivery verification remain pending; Phase 2 functionality remains labelled as preview/coming soon.
+
+## Version 1.3 — realistic collection imagery and clear navigation
+All 300 gallery concepts now use category-specific photorealistic 3D-style AI renders. The primary navigation has a high-contrast green background, bolder labels, current-page highlighting and larger mobile targets. Responsive preview checks cover 320/390/768/1440px. See [render provenance, generation brief and QA](docs/PHOTOREALISTIC-GALLERY.md).
