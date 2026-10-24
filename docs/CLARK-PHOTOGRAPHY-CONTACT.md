@@ -27,3 +27,13 @@ Deployed application v1.4.1, commit 3ca083157b4fb7271243e2a3d4684da3aa75b7c2, to
 - Live homepage proof: screenshots/home-v1.4.1-live.jpg.
 
 Remaining: production Mailtrap token and delivery test; verified exact factory Street View panorama/embed link; Phase 2 integrations; explicit launch/indexing decision. These are not represented as live services.
+
+## v1.4.2 — authentic machine grids, Philexcel and Street View
+
+- Home original-photo grid expanded to 3 with original CSL embroidery equipment (03).
+- About expanded to 6 with original CSL printing (06) and knitting department (11). Capabilities expanded from 8 to 9 with embroidery (03), completing three rows. All original 28 images remain on their relevant pages; no generated equipment is presented as CSL-owned machinery.
+- Clark hero now uses the Philexcel Business Park entrance image from the park's official website: https://philexcel.com.ph/6169ede9-7be2-40e4-8816-5e2d1901c04b.png . Optimized WebP; visible source credit links to https://philexcel.com.ph/ . Screenshot: screenshots/clark-philexcel-live.jpg.
+- Fabrics hero now shows an original CSL fabric texture. Studio uses the original colour/print-planning image. Other page imagery retains original relevant team/factory/workmanship assets.
+- The old website map marker (15.16827,120.565339) did not resolve to CSL Street View and was not reused. Found the verified Google Maps listing for Custom Sports And Leisure: address Unit 11a3 Philexcel, original website and phone match. Its Street View & 360 tab opens Google imagery from May 2024: panorama aqLiJjX4K_NE6vHifCakrw at 15.17246968545677,120.5279783131798, heading147.69229. Obtained the iframe URL from Google's Share → Embed a map UI. Contact now loads this exact panorama after Explore Street View; external button launches the same panorama. This resolves the earlier panorama blocker. No Maps API key required for this provided embed.
+- Mailtrap check found token empty in the private .env; provider is mailtrap, permissions600. No token printed by the configuration check, no email sent, no claim of delivery readiness. Hidden terminal input prepared separately for user entry.
+- All21 checks passed locally and on VPS; health OK, existing CSL and Apache remain active. Only csl-mfg restarted.
