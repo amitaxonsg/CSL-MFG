@@ -88,3 +88,14 @@ Design Gallery now provides 300 illustrative concepts across sports and business
 
 ## Version 1.3 — realistic collection imagery and clear navigation
 All 300 gallery concepts now use category-specific photorealistic 3D-style AI renders. The primary navigation has a high-contrast green background, bolder labels, current-page highlighting and larger mobile targets. Responsive preview checks cover 320/390/768/1440px. See [render provenance, generation brief and QA](docs/PHOTOREALISTIC-GALLERY.md).
+
+
+### Current website policies, discovery and original fabric images
+
+Public policy routes are `/terms`, `/privacy` and `/trade-information`; the sitemap now includes 26 public URLs. Company positioning: **Philippine sportswear & custom apparel manufacturing. Worldwide export.** Policies describe current processing and confirmed website behaviour, not unverified CSL certifications or blanket duty exemptions.
+
+After checkout on a production host, run `node scripts/fetch-fabric-originals.mjs` before restarting the CSL application. It downloads 13 unmodified JPEG fabric originals from the inventoried CSL Squarespace source into an ignored local asset cache. Original fabric thumbnails remain committed and serve as fallback. The explicit JPEG Accept header is necessary because the CDN otherwise negotiates WebP. Originals are typically 1512 × 2016; the gallery atlases have about 362 × 362 source pixels per concept and require separate higher-resolution artwork to improve genuine detail.
+
+The preview supports mouse-wheel zoom, double-click, mouse dragging, touch scrolling, plus/minus and Fit, up to 600%. This does not invent detail absent from the source. Footer assistant entry points dock when the footer is visible.
+
+Search submissions: Google accepted the updated sitemap on 24 October 2026; Bing resubmission was Processing. These acknowledgements do not establish completed indexing.
