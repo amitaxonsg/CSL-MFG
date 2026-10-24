@@ -75,3 +75,5 @@ body.chat-open .analytics-consent{visibility:hidden}
 @media(max-width:600px){.design-zoom{width:calc(100vw - 16px);max-height:94dvh}.design-zoom-header,.design-zoom-footer{padding:12px}.design-zoom-header strong{font-size:14px}.zoom-hint{font-size:12px;padding:6px 9px;top:8px;right:8px}.design-zoom-footer{gap:8px}.design-zoom-footer p{font-size:12px}}
 
 .footer-bottom .powered-by{margin-left:auto;color:#30412c;white-space:nowrap}.powered-by:hover{text-decoration:underline;text-underline-offset:4px}@media(max-width:600px){.footer-bottom .powered-by{display:block;width:100%;text-align:right;margin-top:8px}}
+
+.design-zoom-footer>button{min-width:48px}.zoom-level{display:flex;align-items:center;font-weight:800;min-width:54px}.design-zoom-footer>button:disabled{opacity:.4;cursor:default}.fabric-zoom-canvas>img{width:100%;height:100%;object-fit:contain}.fabric-jump{padding:24px 3.4vw;background:#edf2e4}.fabric-jump p{font-size:16px;margin:14px 0 0;max-width:1000px}.fabric-zoom-trigger{display:block;cursor:zoom-in}.swatch-grid figcaption strong{font-size:18px}
