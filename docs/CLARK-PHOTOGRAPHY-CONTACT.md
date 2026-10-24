@@ -13,3 +13,17 @@
 - Only www.google.com is added to frame-src. Existing frame-ancestors, same-origin scripts and other security restrictions remain. The Google map is not requested until the visitor chooses Load Google Map. Privacy notice explains this.
 - Mailtrap code and branded customer acknowledgement already exist. Production Email Sending API token remains required; sender domain verification and production delivery still need completion. No email sent during this update.
 - Search indexing remains intentionally disabled during prelaunch review. Do not imply SEO publication is already enabled.
+
+## Production verification — 24 October 2026
+
+Deployed application v1.4.1, commit 3ca083157b4fb7271243e2a3d4684da3aa75b7c2, to /opt/csl-mfg. Home is the first desktop/mobile navigation link and uses the current-page highlight. Removed duplicate mobile Design Gallery link.
+
+- All 21 automated checks passed locally and on German VPS.
+- All 24 public sitemap routes returned HTTP 200 on production.
+- /clark-freeport present in live sitemap.xml and llms.txt.
+- Home group photo and Home navigation verified in live browser; desktop 1731px has no horizontal overflow.
+- Phone viewport 390px: Home, Clark and Contact have equal client/scroll widths (375px with scrollbar); navigation opens and includes Home; Clark hero loaded. Contact upload form and Google map load button are present; clicking inserts the expected Google Maps iframe.
+- Health endpoint OK after restart. csl.service, csl-mfg.service and Apache active. Restarted only csl-mfg; no server configuration or global software changes.
+- Live homepage proof: screenshots/home-v1.4.1-live.jpg.
+
+Remaining: production Mailtrap token and delivery test; verified exact factory Street View panorama/embed link; Phase 2 integrations; explicit launch/indexing decision. These are not represented as live services.
