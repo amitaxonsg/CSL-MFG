@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {randomUUID} from 'node:crypto';
 test('HTTP routes, uploads, chatbot, privacy boundaries and redirects work end to end',async()=>{const dir=await mkdtemp(join(tmpdir(),'csl-http-'));process.env.DATA_DIR=dir;process.env.SITE_URL='http://localhost';process.env.SEARCH_INDEXING='false';delete process.env.OPENAI_API_KEY;const {createServer}=await import('../server.mjs');const server=createServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;const post=(path,body,origin)=>fetch(base+path,{method:'POST',headers:{'Content-Type':'application/json',...(origin?{Origin:origin}:{})},body:JSON.stringify(body)});try{
- for(const path of ['/','/products','/studio','/rfq','/contact','/styles.css','/assets/hero.webp','/sitemap.xml','/llms.txt']){const r=await fetch(base+path);assert.equal(r.status,200,path);}
+ for(const path of ['/','/products','/studio','/rfq','/contact','/styles.css','/assets/hero.webp','/sitemap.xml','/llms.txt','/llms-full.txt']){const r=await fetch(base+path);assert.equal(r.status,200,path);}
  const missing=await fetch(base+'/nonexistent');assert.equal(missing.status,404);
  const redirect=await fetch(base+'/history',{redirect:'manual'});assert.equal(redirect.status,301);assert.equal(redirect.headers.get('location'),'/about');
  const res=await fetch(base+'/');assert.match(res.headers.get('content-security-policy'),/frame-ancestors 'none'/);assert.match(await res.text(),/noindex, nofollow/);

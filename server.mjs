@@ -1,3 +1,4 @@
+import {discoveryText} from './lib/discovery.mjs';
 import {heritageImages} from './lib/heritage.mjs';
 import {verifyPassword,hasNexusSession,nexusCookie,openNexusSession,closeNexusSession,nexusAnswer} from './lib/nexus.mjs';
 import http from 'node:http';
@@ -49,32 +50,8 @@ export function createServer(){return http.createServer(async(req,res)=>{
  if(redirects[path]){res.writeHead(301,{Location:redirects[path]});return res.end();}
  const origin=(process.env.SITE_URL||'http://localhost:3000').replace(/\/$/,'');
  if(path==='/robots.txt'){res.setHeader('Content-Type','text/plain');return res.end(process.env.SEARCH_INDEXING==='true'?`User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /nexus\nSitemap: ${origin}/sitemap.xml\n`:'User-agent: *\nDisallow: /\n');}
- if(path==='/sitemap.xml'){res.setHeader('Content-Type','application/xml');return res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${paths.map(p=>`<url><loc>${origin.replace(/&/g,'&amp;')+p}</loc>${heritageImages.filter(x=>x.pages.some(old=>({'/factory':'/capabilities','/history':'/about'}[old]||old)===p)).map(x=>`<image:image><image:loc>${origin}/assets/heritage/${x.file}</image:loc></image:image>`).join('')}</url>`).join('')}</urlset>`);}
- if(path==='/llms.txt'){res.setHeader('Content-Type','text/plain; charset=utf-8');return res.end(`# Custom Sports and Leisure Manufacturing Corp.
-
-> Export-focused, family-owned garment manufacturer based in Clark Freeport Zone, Pampanga, Philippines. International brands, distributors and organisations are primary buyers; Philippine enquiries are also welcome.
-
-## Location
-- [Clark Freeport manufacturing advantage](${origin}/clark-freeport): airport and expressway connectivity, business ecosystem and buyer FAQs. No blanket duty exemption or delivery guarantee.
-
-## Company facts
-- Products: custom sublimated sportswear, cut-and-sew apparel, corporate/leisurewear, knitwear and performance socks.
-- Address: Unit 11A3 Philexcel Business Park, M.A. Roxas Highway, Clark Freeport Zone, Angeles City, Pampanga 2023, Philippines.
-- Phone: +63 45 499 5422.
-- Exact minimum quantities, pricing, lead times, certification and shipping terms require CSL confirmation.
-
-## Public information
-${paths.filter(p=>!['/privacy','/track-order','/studio'].includes(p)).map(p=>'- ['+(p==='/'?'Home':p.slice(1).replaceAll('-',' ').replaceAll('/',' / '))+']('+origin+p+')').join('\n')}
-
-## Feature status
-- [CSL Studio](${origin}/studio): Phase 2 coming soon. Logo uploads, AI design and garment composition are planned, not live.
-- [Track Your Order](${origin}/track-order): fictional Phase 2 preview. No live customer order access.
-- Design Gallery concepts are illustrations or AI-created inspiration, not manufactured customer portfolio evidence. Original factory, history and fabric photography comes from CSL's original website.
-- Public assistant: guided mode unless an OpenAI connection is configured. NEXUS is an internal access-gated workspace; it has no private work-data connection in this version.
-- RFQ/contact forms accept a brief and private artwork. Staff confirm quotations and feasibility.
-
-[Privacy](${origin}/privacy). No financial or internal order data is published.
-`);}
+ if(path==='/sitemap.xml'){res.setHeader('Content-Type','application/xml');return res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${paths.map(p=>`<url><loc>${origin.replace(/&/g,'&amp;')+p}</loc><lastmod>2026-10-24</lastmod>${heritageImages.filter(x=>x.pages.some(old=>({'/factory':'/capabilities','/history':'/about'}[old]||old)===p)).map(x=>`<image:image><image:loc>${origin}/assets/heritage/${x.file}</image:loc></image:image>`).join('')}</url>`).join('')}</urlset>`);}
+ if(path==='/llms.txt'||path==='/llms-full.txt'){res.setHeader('Content-Type','text/plain; charset=utf-8');return res.end(discoveryText(origin,paths,path==='/llms-full.txt'));}
  if(path.startsWith('/assets/')||['/styles.css','/app.js'].includes(path)){
   const file=resolve(publicDir,'.'+path);if(!file.startsWith(publicDir+sep))throw new HttpError(404,'Not found.');let info;try{info=await stat(file);}catch{throw new HttpError(404,'Not found.');}if(!info.isFile()||!mime[extname(file)])throw new HttpError(404,'Not found.');res.setHeader('Content-Type',mime[extname(file)]);res.setHeader('Cache-Control',['.css','.js'].includes(extname(file))?'no-cache':'public, max-age=3600');res.setHeader('Content-Length',info.size);return res.end(req.method==='HEAD'?undefined:await readFile(file));
  }
