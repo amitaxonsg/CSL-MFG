@@ -66,3 +66,17 @@ if(nexusLogin){
  document.querySelectorAll('[data-nexus-prompt]').forEach(b=>b.addEventListener('click',()=>askNexus(b.dataset.nexusPrompt)));
 }
 
+
+// Native modal keeps gallery previews keyboard and touch accessible.
+const zoomTriggers=document.querySelectorAll('.gallery-zoom-trigger');
+if(zoomTriggers.length){
+ const dialog=document.createElement('dialog');dialog.className='design-zoom';dialog.setAttribute('aria-label','Design concept enlarged');
+ const header=document.createElement('div');header.className='design-zoom-header';
+ const title=document.createElement('strong'),close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Close design preview');header.append(title,close);
+ const viewport=document.createElement('div');viewport.className='design-zoom-viewport';const canvas=document.createElement('div');canvas.className='design-zoom-canvas';viewport.append(canvas);
+ const footer=document.createElement('div');footer.className='design-zoom-footer';const toggleZoom=document.createElement('button');toggleZoom.type='button';toggleZoom.textContent='＋ Zoom in';toggleZoom.setAttribute('aria-pressed','false');
+ const enquire=document.createElement('a');enquire.className='button lime';enquire.textContent='Enquire about this design ↗';const note=document.createElement('p');note.textContent='AI-created concept. Zoom in, then scroll or swipe to explore. CSL confirms final artwork and manufacturing.';footer.append(toggleZoom,enquire,note);dialog.append(header,viewport,footer);document.body.append(dialog);
+ let opener;const reset=()=>{canvas.classList.remove('is-zoomed');toggleZoom.textContent='＋ Zoom in';toggleZoom.setAttribute('aria-pressed','false');viewport.scrollTo(0,0);};
+ for(const button of zoomTriggers)button.addEventListener('click',()=>{opener=button;const card=button.closest('.jersey-card');title.textContent=card.querySelector('.jersey-meta p').textContent+' · '+card.querySelector('h3').textContent;canvas.replaceChildren(button.querySelector('.render-tile').cloneNode(true));enquire.href=card.querySelector('.jersey-meta>a').href;reset();document.body.classList.add('design-zoom-open');dialog.showModal();});
+ toggleZoom.addEventListener('click',()=>{const on=canvas.classList.toggle('is-zoomed');toggleZoom.textContent=on?'− Fit design':'＋ Zoom in';toggleZoom.setAttribute('aria-pressed',String(on));});close.addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>{document.body.classList.remove('design-zoom-open');opener?.focus();});
+}
