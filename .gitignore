@@ -5,3 +5,5 @@ node_modules/
 var/
 *.log
 .DS_Store
+
+public/assets/fabric-originals/
