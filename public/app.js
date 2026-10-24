@@ -56,4 +56,4 @@ if(nexusLogin){
 }
 
 const loadMap=document.querySelector('[data-load-map]');
-if(loadMap)loadMap.addEventListener('click',()=>{const frame=document.createElement('iframe');frame.title='CSL factory location search in Google Maps';frame.src='https://www.google.com/maps?q='+encodeURIComponent('Custom Sports and Leisure Manufacturing Corp Unit 11A3 Philexcel Business Park Clark Freeport Philippines')+'&output=embed';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allowFullscreen=true;document.querySelector('#factory-map').replaceChildren(frame);});
+if(loadMap)loadMap.addEventListener('click',()=>{const frame=document.createElement('iframe');frame.title='Google Street View at the CSL location, May 2024';frame.src='https://www.google.com/maps/embed?pb=!4v1792802390558!6m8!1m7!1saqLiJjX4K_NE6vHifCakrw!2m2!1d15.17246968545677!2d120.5279783131798!3f147.69229!4f0!5f0.7820865974627469';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allowFullscreen=true;document.querySelector('#factory-map').replaceChildren(frame);});
