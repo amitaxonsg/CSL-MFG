@@ -1,6 +1,6 @@
 {
   "name": "csl-mfg",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "private": true,
   "type": "module",
   "description": "CSL manufacturing website with private RFQs, artwork uploads and an OpenAI-ready assistant",

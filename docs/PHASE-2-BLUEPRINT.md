@@ -7,7 +7,7 @@ The current release adds interactive **preview pages**, a staff chat access gate
 | Area | Current provision | Phase 2 result |
 |---|---|---|
 | Track your Order | Disabled access preview, fictional current/past orders, repeat-request demonstrator | Verified customer order access |
-| Jersey Gallery | 12 schematic concept designs per sport, Rugby first; filters and concept-to-RFQ link | Curated real product photography, saved designs and optional AI variations |
+| Jersey Gallery | 300 photorealistic AI concepts across14 sports and11 business collections;12 per collection, filters and concept-to-RFQ link | Curated real product photography, saved designs and optional AI variations |
 | CSL Studio | Coming Soon roadmap | Garment templates, logo placement, AI concepts and versioned enquiry exports |
 | ASK NEXUS | Server-verified staff access; bounded text assistant; no company source tools | Individual staff identity, scoped email/Trello retrieval and approved skills |
 | Mailtrap | Server-only transactional sending adapter with mocked success/failure tests | Verified sender, production recipients, notification workflows and delivery events |
@@ -154,3 +154,7 @@ Official API reference: https://docs.mailtrap.io/developers/email-sending/transa
 - Staff access can be revoked; NEXUS supplies genuine source references and cannot execute write actions without approval.
 - Mailtrap accepted/delivered/bounced states are distinct; failed delivery does not erase the underlying enquiry.
 - No private source or live customer data is included in public gallery samples or Git.
+
+## Live board review
+
+See TRELLO-WEBSITE-GAP-REVIEW.md for the24 October2026 read-only workflow review and implementation priorities. Source-specific client and staff data is intentionally omitted from public documentation.
