@@ -8,7 +8,10 @@ nav.addEventListener('click',e=>{if(e.target.closest('a'))closeMenu();});
 window.addEventListener('resize',()=>{if(innerWidth>1440)closeMenu();});
 const chat=$('#chat-panel'), launcher=$('.chat-launcher'), chatInput=$('#chat-input'), messages=$('.chat-messages');
 let lastChatFocus=null;
-function setChat(open){chat.hidden=!open;launcher.setAttribute('aria-expanded',String(open));if(open){lastChatFocus=document.activeElement;chatInput.focus();}else (lastChatFocus||launcher).focus();}
+const chatBackdrop=$('.chat-backdrop');
+function setChat(open){chat.hidden=!open;chatBackdrop.hidden=!open;document.body.classList.toggle('chat-open',open);launcher.setAttribute('aria-expanded',String(open));if(open){lastChatFocus=document.activeElement;chat.focus();}else (lastChatFocus||launcher).focus();}
+chatBackdrop.addEventListener('click',()=>setChat(false));
+chat.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const items=[...chat.querySelectorAll('a[href],button,input')].filter(el=>!el.disabled&&el.getClientRects().length);const first=items[0],last=items.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===chat)){e.preventDefault();last?.focus();}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===chat)){e.preventDefault();first?.focus();}});
 launcher.addEventListener('click',()=>setChat(chat.hidden));$('#chat-close').addEventListener('click',()=>setChat(false));
 document.querySelectorAll('[data-open-chat]').forEach(b=>b.addEventListener('click',()=>setChat(true)));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!chat.hidden)setChat(false);closeMenu();}});
