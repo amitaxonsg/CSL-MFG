@@ -84,3 +84,6 @@ if(zoomTriggers.length){
  toggleZoom.addEventListener('click',()=>{scale=Math.min(6,scale+0.5);applyZoom();});zoomOut.addEventListener('click',()=>{scale=Math.max(1,scale-0.5);applyZoom();});fit.addEventListener('click',reset);
  close.addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>{document.body.classList.remove('design-zoom-open');opener?.focus();});
 }
+
+// Dock assistant entry points in the footer so floating buttons never cover it.
+const footerDock=document.querySelector('.site-footer');if(footerDock&&'IntersectionObserver' in window){new IntersectionObserver(entries=>{document.body.classList.toggle('footer-visible',entries[0].isIntersecting);},{threshold:0}).observe(footerDock);}
